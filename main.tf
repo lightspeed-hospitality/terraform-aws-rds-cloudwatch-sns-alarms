@@ -25,7 +25,7 @@ module "subscription_label" {
   source  = "cloudposse/label/null"
   version = "0.24.1"
 
-  attributes = ["rds", "event", "sub"]
+  attributes = ["rds", "event", "sub", var.db_instance_id]
 
   context = module.this.context
 }
