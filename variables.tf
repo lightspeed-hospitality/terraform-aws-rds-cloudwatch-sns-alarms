@@ -56,3 +56,9 @@ variable "aws_sns_topic_arn" {
   type        = string
   default     = ""
 }
+
+variable "read_iops_threshold" {
+  description = "The maximum read IOPS."
+  type        = number
+  default     = 3000
+}

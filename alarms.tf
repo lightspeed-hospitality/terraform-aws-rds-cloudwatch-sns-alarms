@@ -7,6 +7,7 @@ locals {
     FreeableMemoryThreshold   = max(var.freeable_memory_threshold, 0)
     FreeStorageSpaceThreshold = max(var.free_storage_space_threshold, 0)
     SwapUsageThreshold        = max(var.swap_usage_threshold, 0)
+    ReadIOPSThreshold         = max(var.read_iops_threshold, 0)
   }
 }
 
@@ -128,6 +129,24 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_too_high" {
   statistic           = "Average"
   threshold           = local.thresholds["SwapUsageThreshold"]
   alarm_description   = "Average database swap usage over last 10 minutes too high, performance may suffer"
+  alarm_actions       = local.aws_sns_topic_arn
+  ok_actions          = local.aws_sns_topic_arn
+
+  dimensions = {
+    DBInstanceIdentifier = var.db_instance_id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "read_iops_too_high" {
+  alarm_name          = "read_iops_too_high_${var.db_instance_id}"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "ReadIOPS"
+  namespace           = "AWS/RDS"
+  period              = "600"
+  statistic           = "Average"
+  threshold           = local.thresholds["ReadIOPSThreshold"]
+  alarm_description   = "Average database read IOPS over last 10 minutes too high, performance may suffer"
   alarm_actions       = local.aws_sns_topic_arn
   ok_actions          = local.aws_sns_topic_arn
 
