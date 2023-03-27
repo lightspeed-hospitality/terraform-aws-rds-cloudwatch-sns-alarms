@@ -58,7 +58,7 @@ variable "aws_sns_topic_arn" {
 }
 
 variable "read_iops_threshold" {
-  description = "The maximum read IOPS."
+  description = "The threshold for read IOPS."
   type        = number
   default     = 3000
 }
